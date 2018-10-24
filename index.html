@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style type="text/css">
+  body {
+    padding: 40px 0;
+    background-color: #92cef7;
+  }
+  #frame {
+      width: 600px;
+      margin: auto;
+    }
+    #frame::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+   #frame div {
+      outline: dashed #0044fd 2px;
+      width: 120px;
+      height: 79px;
+      float: left;
+      min-height: 79px;
+    }
+
+    #frame img {
+      width: 120px;
+    }
+    #rabbit {
+      border: 1px dashed #0044fd;
+      width: 600px;
+      display: block;
+      margin: 40px auto;
+    }
+  
+  </style>
+</head>
+
+<body>
+  <div id="frame"></div>
+  <img src="zec/a.jpg" alt="Full rabbit" id="rabbit">
+  <script type="text/javascript">
+    var ispis = '';
+    var i;
+    var okvir = document.getElementById('frame');
+    ispis += "<div id='field1'></div>";
+    // Niz koji stavlja sve random brojeve
+    var randomArray = [];
+    
+    // Petlja za random brojeve koja ispisuje od 2 do 19
+    while (randomArray.length < 19){
+      var randomBr =  1 + Math.ceil(Math.random() * 19);
+
+      // Proveravamo da li je random broj u nizu, ako nije onda ga stavljamo
+      if(randomArray.indexOf(randomBr) == -1){
+        randomArray.push(randomBr);
+      }
+      
+      console.log(randomArray);
+    }
+  
+    for (i = 2,b = 0; i < 21; i++,b++) {
+      // Crtamo polja i unutar njih img sa random src atributom. Dodao sam data-value da bih izjednacio vrednost sa src-om zbog provere polja i src-a
+      ispis += `<div id="field${i}"><img src="zec/${randomArray[b]}.jpg" alt="${i}" data-value="${randomArray[b]}"></div>`;
+    }
+    
+    okvir.innerHTML = ispis;
+
+    okvir.addEventListener('click', function (e) {
+      var kliknuto = Number(e.target.alt);
+      if (kliknuto > 0) {
+        var prazno_polje = 5;
+        for (i = 1; i <= 20; i++) {
+          if (!document.querySelector('#field' + i + ' img')) {
+            prazno_polje = i;
+          }
+        }
+        console.log('kliknuto na ', kliknuto, 'prazno', prazno_polje);
+        var razlika = prazno_polje - kliknuto;
+        if (razlika < 0) {
+          razlika = -1 * razlika;
+        }
+        console.log('razlika', razlika);
+        if ((razlika == 1 || razlika == 5) &&
+          (!(razlika == 1 && (kliknuto == 5 && prazno_polje == 6))) &&
+          (!(razlika == 1 && (kliknuto == 6 && prazno_polje == 5))) &&
+          (!(razlika == 1 && (kliknuto == 10 && prazno_polje == 11))) &&
+          (!(razlika == 1 && (kliknuto == 11 && prazno_polje == 10))) &&
+          (!(razlika == 1 && (kliknuto == 15 && prazno_polje == 16))) &&
+          (!(razlika == 1 && (kliknuto == 16 && prazno_polje == 15)))
+        ) {
+          document.getElementById('field' + prazno_polje).innerHTML =
+            document.getElementById('field' + kliknuto).innerHTML;
+
+          document.getElementById('field' + kliknuto).innerHTML = '';
+          document.querySelector('#field' + prazno_polje + ' img').alt = prazno_polje;
+        }
+      }
+      // Uslov za kraj
+      check();
+    });
+    // Funkcija proverava da li pri svakom kliku je ispunjen uslov, da li je data-value slike jedan id-u diva
+    function check(){
+      var divs = Array.from(okvir.children);
+      divs.forEach(function(item){
+
+        // Ako nije prazan div/ako ima sliku unutar njega
+        if(!(item.innerHTML === "")){
+          // Uzimamo ID diva
+          var id_ =  item.id;
+          // Brisemo pocetak stringa(polje) da bi nam ostao samo broj
+          var id1 = id_.slice(5);
+          // uzimamo sliku unutar diva
+          var img = item.firstChild;
+          // data-value vrednost slike
+          var data = img.getAttribute('data-value');
+          if(id1===data){
+            // Dajemo outline zelen divu
+            item.style.outline = '2px dashed #0044fd';
+            // Dajemo divu status complete
+            item.setAttribute('data-complete','');
+          } else {
+            item.style.outline = '2px dashed #0044fd';
+          }
+          
+        } 
+        
+        // Alert
+        
+   
+
+      });
+    };
+  </script>
+</body>
+
+</html>
