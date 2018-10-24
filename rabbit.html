@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style type="text/css">
+        body {
+            padding: 40px 0;
+            background-color: #92cef7;
+        }
+      
+        h1{
+            text-align: center;
+            font-size: 40px;
+            color: #0044fd;
+        }
+        #frame {
+            width: 600px;
+            margin: auto;
+        }
+
+        #frame::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        #frame div {
+            outline: dashed #0044fd 2px;
+            width: 120px;
+            height: 79px;
+            float: left;
+            min-height: 79px;
+        }
+
+        #frame img {
+            width: 120px;
+        }
+
+        #rabbit {
+            border: 2px solid #0044fd;
+            width: 500px;
+            display: block;
+            margin: 40px auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-content">
+        <h1>Zekalanga</h1>
+        <div id="frame"></div>
+        <img src="zec/a.jpg" alt="Full rabbit" id="rabbit">
+    </div>
+    <script type="text/javascript">
+        var ispis = '';
+        var i;
+        var frameRabbit = document.getElementById('frame');
+        ispis += "<div id='field1'></div>";
+        // Niz koji stavlja sve random brojeve
+        var randomArray = [];
+
+        // Petlja za random brojeve koja ispisuje od 2 do 19
+        while (randomArray.length < 19) {
+            var randomNums = 1 + Math.ceil(Math.random() * 19);
+
+            // Proveravamo da li je random broj u nizu, ako nije onda ga stavljamo
+            if (randomArray.indexOf(randomNums) == -1) {
+                randomArray.push(randomNums);
+            }
+
+            console.log(randomArray);
+        }
+
+        for (i = 2, b = 0; i < 21; i++ , b++) {
+            // Crtamo polja i unutar njih img sa random src atributom. Dodao sam data-value da bih izjednacio vrednost sa src-om zbog provere polja i src-a
+            ispis += `<div id="field${i}"><img src="zec/${randomArray[b]}.jpg" alt="${i}" data-value="${randomArray[b]}"></div>`;
+        }
+
+        frameRabbit.innerHTML = ispis;
+
+        frameRabbit.addEventListener('click', function (e) {
+            var clicked = Number(e.target.alt);
+            if (clicked > 0) {
+                var empty_field = 5;
+                for (i = 1; i <= 20; i++) {
+                    if (!document.querySelector('#field' + i + ' img')) {
+                        empty_field = i;
+                    }
+                }
+                console.log('clicked on ', clicked, 'empty', empty_field);
+                var difference = empty_field - clicked;
+                if (difference < 0) {
+                    difference = -1 * difference ;
+                }
+                console.log('difference', difference);
+                if ((difference == 1 || difference == 5) &&
+                    (!(difference == 1 && (clicked == 5 && empty_field == 6))) &&
+                    (!(difference == 1 && (clicked == 6 && empty_field == 5))) &&
+                    (!(difference == 1 && (clicked == 10 && empty_field == 11))) &&
+                    (!(difference == 1 && (clicked == 11 && empty_field == 10))) &&
+                    (!(difference == 1 && (clicked == 15 && empty_field == 16))) &&
+                    (!(difference == 1 && (clicked == 16 && empty_field == 15)))
+                ) {
+                    document.getElementById('field' + empty_field).innerHTML =
+                        document.getElementById('field' + clicked).innerHTML;
+
+                    document.getElementById('field' + clicked).innerHTML = '';
+                    document.querySelector('#field' + empty_field + ' img').alt = empty_field;
+                }
+            }
+            // Uslov za kraj
+            check();
+        });
+        // Funkcija proverava da li pri svakom kliku je ispunjen uslov, da li je data-value slike jedan id-u diva
+        function check() {
+            var divs = Array.from(frameRabbit.children);
+            divs.forEach(function (item) {
+
+                // Ako nije prazan div/ako ima sliku unutar njega
+                if (!(item.innerHTML === "")) {
+                    // Uzimamo ID diva
+                    var id_ = item.id;
+                    // Brisemo pocetak stringa(polje) da bi nam ostao samo broj
+                    var id1 = id_.slice(5);
+                    // uzimamo sliku unutar diva
+                    var img = item.firstChild;
+                    // data-value vrednost slike
+                    var data = img.getAttribute('data-value');
+                    if (id1 === data) {
+                        // Dajemo outline zelen divu
+                        item.style.outline = '1px dashed #0044fd';
+                        // Dajemo divu status complete
+                        item.setAttribute('data-complete', '');
+                    } else {
+                        item.style.outline = '1px dashed #0044fd';
+                    }
+
+                }
+
+                // Alert
+
+
+
+            });
+        };
+    </script>
+</body>
+
+</html>
